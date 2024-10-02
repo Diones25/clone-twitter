@@ -54,7 +54,7 @@ export const signup = async (req: Request, res: Response): Promise<any> => {
   });
 }
 
-export const signin = async (req: Request, res: Response) => {
+export const signin = async (req: Request, res: Response): Promise<any> => {
   const safeData = signinSchema.safeParse(req.body);
   if (!safeData.success) {
     return res.status(400).json({ error: safeData.error.flatten().fieldErrors });
