@@ -5,7 +5,7 @@ import slug from "slug";
 import { hash } from "bcrypt-ts";
 import { createJWT } from "../utils/jwt";
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (req: Request, res: Response): Promise<any> => {
   //validar dados recebidos
   const safeData = signupSchema.safeParse(req.body);
   if (!safeData.success) {
