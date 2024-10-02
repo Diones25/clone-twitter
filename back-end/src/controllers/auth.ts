@@ -43,7 +43,7 @@ export const signup = async (req: Request, res: Response) => {
   const token = createJWT(userSlug);
 
   //retornar o resultado (token, user)
-  res.status(201).json({
+  return res.status(201).json({
     token,
     user: {
       name: newUser.name,
@@ -51,4 +51,8 @@ export const signup = async (req: Request, res: Response) => {
       avatar: newUser.avatar
     }
   });
+}
+
+export const signin = async (req: Request, res: Response) => {
+
 }
