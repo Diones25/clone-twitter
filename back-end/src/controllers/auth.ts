@@ -3,6 +3,7 @@ import { signupSchema } from "../schemas/signup";
 import { createUser, findUserByEmail, findUserBySlug } from "../services/user";
 import slug from "slug";
 import { hash } from "bcrypt-ts";
+import { createJWT } from "../utils/jwt";
 
 export const signup = async (req: Request, res: Response) => {
   //validar dados recebidos
@@ -39,8 +40,8 @@ export const signup = async (req: Request, res: Response) => {
     password: hashPassword
   }); 
   //criar token
-  const token = '';
-  
+  const token = createJWT(userSlug);
+
   //retornar o resultado (token, user)
   res.status(201).json({
     token,
