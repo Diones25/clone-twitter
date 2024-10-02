@@ -6,7 +6,7 @@ import { verifyJWT } from '../utils/jwt';
 export const mainRouter = Router();
 
 mainRouter.get('/ping', pingController.ping);
-mainRouter.get('/privateping', verifyJWT as any, pingController.privatePing as any);
+mainRouter.get('/privateping', verifyJWT, pingController.privatePing);
 
 mainRouter.post('/auth/signup', authController.signup);
 mainRouter.post('/auth/signin', authController.signin);
