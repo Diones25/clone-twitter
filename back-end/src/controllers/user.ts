@@ -1,6 +1,8 @@
 import { Response } from "express";
 import { ExtendedRequest } from "../types/extended-request";
 import { findUserBySlug, getUserFollingCount, getUserFollowersCount, getUserTweetCount } from "../services/user";
+import { userTweetsSchema } from "../schemas/user-tweet";
+import { findTweetByUser } from "../services/tweet";
 
 export const getUser = async (req: ExtendedRequest, res: Response) => {
   const { slug } = req.params;
@@ -15,4 +17,24 @@ export const getUser = async (req: ExtendedRequest, res: Response) => {
   const tweetCount = await getUserTweetCount(user.slug);
 
   return res.status(200).json({ user, folowingCount, followersCount, tweetCount });
+}
+
+export const getUserTweets = async (req: ExtendedRequest, res: Response) => {
+  const { slug } = req.params;
+
+  const safeData = userTweetsSchema.safeParse(req.query);
+  if (!safeData.success) {
+    return res.status(400).json({ error: safeData.error.flatten().fieldErrors });
+  }
+
+  let perPage = 2;
+  let currentPage = safeData.data.page ?? 0;
+
+  const tweets = await findTweetByUser(
+    slug,
+    currentPage,
+    perPage
+  );
+
+  return res.status(200).json({ tweets, page: currentPage });
 }
