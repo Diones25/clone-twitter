@@ -1,7 +1,14 @@
 import { Response } from "express";
 import { ExtendedRequest } from "../types/extended-request";
 import { addTweetSchema } from "../schemas/add-tweet";
-import { createTweet, findAnswersFromTweet, findTweet } from "../services/tweet";
+import {
+  checkIfTweetIsLikedByUser,
+  createTweet,
+  findAnswersFromTweet,
+  findTweet,
+  likeTweet,
+  unlikeTweet
+} from "../services/tweet";
 import { addHastag } from "../services/trend";
 
 export const addTweet = async (req: ExtendedRequest, res: Response) => {
@@ -49,4 +56,27 @@ export const getAnswers = async (req: ExtendedRequest, res: Response) => {
   const { id } = req.params;
   const answers = await findAnswersFromTweet(parseInt(id));
   return res.status(200).json({ answers })
+}
+
+export const likeToggle = async (req: ExtendedRequest, res: Response) => {
+  const { id } = req.params;
+  const liked = await checkIfTweetIsLikedByUser(
+    req.userSlug as string,
+    parseInt(id)
+  )
+
+  if (liked) {
+    unlikeTweet(
+      req.userSlug as string,
+      parseInt(id)
+    );
+  }
+  else {
+    likeTweet(
+      req.userSlug as string,
+      parseInt(id)
+    )
+  }
+
+  return res.json({});
 }
