@@ -1,6 +1,14 @@
 import { Response } from "express";
 import { ExtendedRequest } from "../types/extended-request";
-import { findUserBySlug, getUserFollingCount, getUserFollowersCount, getUserTweetCount } from "../services/user";
+import {
+  checkIfFollows,
+  findUserBySlug,
+  follow,
+  getUserFollingCount,
+  getUserFollowersCount,
+  getUserTweetCount,
+  unfollow
+} from "../services/user";
 import { userTweetsSchema } from "../schemas/user-tweet";
 import { findTweetByUser } from "../services/tweet";
 
@@ -37,4 +45,23 @@ export const getUserTweets = async (req: ExtendedRequest, res: Response) => {
   );
 
   return res.status(200).json({ tweets, page: currentPage });
+}
+
+export const followToggle = async (req: ExtendedRequest, res: Response) => {
+  const { slug } = req.params;
+  const me = req.userSlug as string;
+
+  const hasUserToBeFollowed = await findUserBySlug(slug);
+  if (!hasUserToBeFollowed) {
+    return res.status(404).json({ error: 'Usuário não encontrado' });
+  }
+
+  const folows = await checkIfFollows(me, slug);
+  if (!folows) {
+    await follow(me, slug);
+    return res.status(201).json({ following: true });
+  } else {
+    await unfollow(me, slug);
+    return res.status(201).json({ following: false });
+  }
 }
