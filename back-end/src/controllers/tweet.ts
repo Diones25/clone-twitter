@@ -35,3 +35,12 @@ export const addTweet = async (req: ExtendedRequest, res: Response) => {
 
   return res.status(201).json({ tweet: newTweet });
 }
+
+export const getTweet = async (req: ExtendedRequest, res: Response) => {
+  const { id } = req.params;
+  const tweet = await findTweet(parseInt(id));
+  if (!tweet) {
+    return res.status(404).json({ error: 'Tweet não encontrado' });
+  }
+  return res.status(200).json({ tweet });
+}
