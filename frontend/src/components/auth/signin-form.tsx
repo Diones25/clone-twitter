@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react";
 import Input from "../ui/input";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import Button from "../ui/button";
 
 const SigninForm = () => {
   const router = useRouter();
@@ -30,7 +31,11 @@ const SigninForm = () => {
         password
       />
 
-      <button onClick={handleEnterButton}>Entrar</button>
+      <Button
+        label="Entrar"
+        onClick={handleEnterButton}
+        size={1}
+      />
     </>
   )
 }
